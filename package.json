@@ -1,0 +1,19 @@
+{
+  "name": "composite-golf",
+  "version": "1.0.0",
+  "description": "Composite Golf",
+  "main": "bin/index.js",
+  "scripts": {},
+  "author": "Matteo Tonini",
+  "license": "ISC",
+  "bin": {
+    "composite-golf": "./bin/index.js"
+  },
+  "dependencies": {
+    "chalk": "2.4",
+    "cli-table": "^0.3.6",
+    "rgb-regex": "^1.0.1",
+    "rgba-regex": "^1.0.0",
+    "yargs": "^17.2.1"
+  }
+}
