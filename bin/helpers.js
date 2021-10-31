@@ -120,3 +120,22 @@ exports.rgbaToHex = function (colorObject) {
 
   return ('#' + outParts.join(''));
 }
+
+exports.hexToGolf = function (hexColor) {
+
+  var channelStartsAt = {r: 1, g: 3, b: 5, a: 7};
+  var golfed = '#';
+
+  for (const channel in channelStartsAt) {
+
+    let index = channelStartsAt[channel];
+    if (hexColor[index] !== hexColor[index + 1]) {
+      return hexColor;
+    }
+
+    golfed += hexColor[index];
+
+  }
+
+  return golfed;
+}

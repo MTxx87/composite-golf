@@ -1,4 +1,4 @@
-const { rgbaParse, rgbParse, computeOverlayComposite, rgbaToHex } = require('../helpers');
+const { rgbaParse, rgbParse, computeOverlayComposite, rgbaToHex, hexToGolf } = require('../helpers');
 const chalk = require("chalk");
 var Table = require('cli-table');
 const error = chalk.bold.red;
@@ -51,11 +51,17 @@ exports.handler = function (argv) {
   for (var i=0; i<results.length; i++) {
     let color = results[i];
     var stringified = 'rgba(' + Object.values(color).join(',') + ')';
-    var stringifiedHex = rgbaToHex(color);
 
     if (!rgbaParse(stringified)) {
-      stringified = '-';
-      stringifiedHex = '';
+      table.push([color.alpha.toFixed(2), '-', '']);
+      continue;
+    }
+
+    var stringifiedHex = rgbaToHex(color).toUpperCase();
+    var hexGolfed = hexToGolf(stringifiedHex);
+
+    if (hexGolfed.length < stringifiedHex.length) {
+      stringifiedHex = success(hexGolfed);
     }
 
     table.push(
