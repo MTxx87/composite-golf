@@ -45,11 +45,13 @@ exports.handler = function (argv) {
   let results = computeOverlayComposite(argv.backdrop, argv.result, argv.alpha);
 
   var table = new Table({
-      head: ['Alpha', 'RGBa', 'HEX'],
+      head: ['Alpha', 'RGBa', 'HEX', 'Error (%)'],
   });
 
   for (var i=0; i<results.length; i++) {
     let color = results[i];
+    let percentage = color.errorPercentage;
+    delete color.errorPercentage;
     var stringified = 'rgba(' + Object.values(color).join(',') + ')';
 
     if (!rgbaParse(stringified)) {
@@ -64,11 +66,19 @@ exports.handler = function (argv) {
       stringifiedHex = success(hexGolfed);
     }
 
+    var percentageDisplay = percentage.toFixed(2) + '%';
+    if (percentage === 0) {
+      percentageDisplay = '';
+    } else if (percentage < 0.01) {
+      percentageDisplay = '< 0.01%';
+    }
+
     table.push(
       [
         color.alpha.toFixed(2),
         stringified,
-        stringifiedHex
+        stringifiedHex,
+        percentageDisplay
       ]
     )
 

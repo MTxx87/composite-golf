@@ -89,11 +89,42 @@ exports.computeOverlayComposite = function(backdrop, result, alpha) {
 
   for (var i=0; i < alphaValues.length; i++) {
     let alpha = (alphaValues[i] + 1) / subdivision;
+
+    let color = {
+      r : {
+        value: (result.R - (backdrop.R * backdrop.alpha * (1 - alpha))) / alpha,
+        rounded: Math.round((result.R - (backdrop.R * backdrop.alpha * (1 - alpha))) / alpha)
+      },
+      g : {
+        value: (result.G - (backdrop.G * backdrop.alpha * (1 - alpha))) / alpha,
+        rounded: Math.round((result.G - (backdrop.G * backdrop.alpha * (1 - alpha))) / alpha)
+      },
+      b : {
+        value: (result.B - (backdrop.B * backdrop.alpha * (1 - alpha))) / alpha,
+        rounded: Math.round((result.B - (backdrop.B * backdrop.alpha * (1 - alpha))) / alpha)
+      },
+    }
+
+    var delta = 0;
+    for (const channel in color) {
+
+      let values = color[channel];
+
+      if (values.value === values.rounded) {
+        continue;
+      }
+
+      delta += Math.abs(values.value - values.rounded);
+    }
+
+    let errorPercentage = 100 * delta / 756;
+
     let overlayColor = {
-      'R' : Math.round((result.R - (backdrop.R * backdrop.alpha * (1 - alpha))) / alpha),
-      'G' : Math.round((result.G - (backdrop.G * backdrop.alpha * (1 - alpha))) / alpha),
-      'B' : Math.round((result.B - (backdrop.B * backdrop.alpha * (1 - alpha))) / alpha),
-      'alpha' : alpha
+      'R' : color.r.rounded,
+      'G' : color.g.rounded,
+      'B' : color.b.rounded,
+      'alpha' : alpha,
+      'errorPercentage' : errorPercentage,
     }
     computedColors.push(overlayColor);
   }
